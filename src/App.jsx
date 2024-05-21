@@ -1,34 +1,56 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { useRoutes, BrowserRouter } from 'react-router-dom';
+import { Auth0Provider, useAuth0 } from '@auth0/auth0-react';
+
+const LoginButton = () => {
+  const { loginWithRedirect } = useAuth0();
+  return <button
+  className='flex mx-auto mt-10 px-2 font-medium bg-gray-200 rounded-sm text-gray-600 hover:shadow-lg hover:shadow-gray-400 transition-shadow'
+  onClick={() => loginWithRedirect()}>
+    Start
+  </button>;
+};
+
+const HomeView = () => {
+  return <div>
+    <LoginButton />
+  </div>
+}
+
+const DashboardView = () => {
+  return <h1>Welcome</h1>
+}
 
 function App() {
-  const [count, setCount] = useState(0)
+
+  const AppRoutes = () => {
+    const routes = useRoutes([
+      {
+        path: '/',
+        element: <HomeView />
+      },
+      {
+        path: '/dashboard',
+        element: <DashboardView />,
+      }
+    ]);
+    return routes;
+  }
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <Auth0Provider
+        domain={import.meta.env.VITE_DOMAIN}
+        clientId={import.meta.env.VITE_CLIENT_ID}
+        authorizationParams={{
+          redirect_uri: import.meta.env.VITE_REDIRECT_URI
+        }}
+      >
+        <BrowserRouter>
+          <AppRoutes />
+        </BrowserRouter>
+      </Auth0Provider>
     </>
-  )
+  );
 }
 
 export default App
