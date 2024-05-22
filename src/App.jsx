@@ -3,7 +3,7 @@ import { Auth0Provider, useAuth0 } from '@auth0/auth0-react';
 import TrackingForm from './components/trackingForm';
 
 const LoginButton = () => {
-  const { loginWithRedirect, isAuthenticated } = useAuth0();
+  const { loginWithRedirect } = useAuth0();
   return <button
   className='flex mx-auto mt-10 px-2 font-medium bg-gray-200 rounded-sm text-gray-600 hover:shadow-lg hover:shadow-gray-400 transition-shadow'
   onClick={() => loginWithRedirect()}>
@@ -18,6 +18,7 @@ const HomeView = () => {
 }
 
 const DashboardView = () => {
+  const { isAuthenticated } = useAuth0();
   return (isAuthenticated)
   ? <TrackingForm />
   : <LoginButton />
